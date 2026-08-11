@@ -1,0 +1,337 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FD2454676A0F4AC4BE9E9958 /* MacLiveWallpaperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA77243E8B4946ACB4B9A97D /* MacLiveWallpaperApp.swift */; };
+		82A7601BA21F4196AA62EBDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EC5A6A3EF4C738A6D0254 /* AppDelegate.swift */; };
+		AF1D6FDE7D194927B910583A /* Wallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2A90A09ED47ACB4745189 /* Wallpaper.swift */; };
+		4D708829F1444EE2BCC08ABB /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39916699E4A74DDD9F82C7DB /* AppSettings.swift */; };
+		6CD9935EEDB1491AA5867DE9 /* PreferenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2610ACA59184057AB83C06D /* PreferenceStore.swift */; };
+		33CA7F66068843D0A9C3A6A0 /* PowerStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637A774AC12D4DA1AA141608 /* PowerStateObserver.swift */; };
+		B91115EEA9FE40BE83C74E17 /* ScreenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA7DFAC5DA34E1E976C0AF1 /* ScreenManager.swift */; };
+		E452B5D115214AF38BA0B6D8 /* LoginItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C155F6F8544A7AA4342BF3 /* LoginItemManager.swift */; };
+		9669E9A699C0478481309140 /* FileImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460EFF43902148B094CB0F3E /* FileImportService.swift */; };
+		D0652E2DC9DC415C971AFB1B /* VideoPlaybackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CACA0C385F4ADEB4B7F467 /* VideoPlaybackController.swift */; };
+		1166E49684A346C4AC43F9B8 /* WallpaperWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136408B604FF41E5BBA55905 /* WallpaperWindowController.swift */; };
+		783CE65A93B54128B8171188 /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AE34757B0C4752BE4F47EB /* WallpaperManager.swift */; };
+		E425FE29FC244622B4B6EA3F /* VideoPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535DAED86D2647A6A9747AB6 /* VideoPreviewView.swift */; };
+		CABD75EBCACF462296E25B09 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385A2B637B304BD88D9B9571 /* EmptyStateView.swift */; };
+		E14E5560751C4503A1A52496 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0FC04FC6B84FA09520ED4D /* SettingsView.swift */; };
+		0A747E77F56A4B86A42927A8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85528EF756144FE5BEB86791 /* MainView.swift */; };
+		3FD49497FD6D49EAB01C45A7 /* MenuBarExtraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874581F830841959C60E1D4 /* MenuBarExtraView.swift */; };
+		ED0C0BD8D6F24EBEA0F53C53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 554EAA59809A49B8A0C30E10 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		31F5DA6CBE7248C59AFE8AEE /* MacLiveWallpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacLiveWallpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA77243E8B4946ACB4B9A97D /* MacLiveWallpaperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/MacLiveWallpaperApp.swift"; sourceTree = "<group>"; };
+		2E9EC5A6A3EF4C738A6D0254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App/AppDelegate.swift"; sourceTree = "<group>"; };
+		D9E2A90A09ED47ACB4745189 /* Wallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Wallpaper.swift"; sourceTree = "<group>"; };
+		39916699E4A74DDD9F82C7DB /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/AppSettings.swift"; sourceTree = "<group>"; };
+		A2610ACA59184057AB83C06D /* PreferenceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/PreferenceStore.swift"; sourceTree = "<group>"; };
+		637A774AC12D4DA1AA141608 /* PowerStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/PowerStateObserver.swift"; sourceTree = "<group>"; };
+		DEA7DFAC5DA34E1E976C0AF1 /* ScreenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/ScreenManager.swift"; sourceTree = "<group>"; };
+		11C155F6F8544A7AA4342BF3 /* LoginItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/LoginItemManager.swift"; sourceTree = "<group>"; };
+		460EFF43902148B094CB0F3E /* FileImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/FileImportService.swift"; sourceTree = "<group>"; };
+		15CACA0C385F4ADEB4B7F467 /* VideoPlaybackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallpaper/VideoPlaybackController.swift"; sourceTree = "<group>"; };
+		136408B604FF41E5BBA55905 /* WallpaperWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallpaper/WallpaperWindowController.swift"; sourceTree = "<group>"; };
+		43AE34757B0C4752BE4F47EB /* WallpaperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallpaper/WallpaperManager.swift"; sourceTree = "<group>"; };
+		535DAED86D2647A6A9747AB6 /* VideoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/VideoPreviewView.swift"; sourceTree = "<group>"; };
+		385A2B637B304BD88D9B9571 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/EmptyStateView.swift"; sourceTree = "<group>"; };
+		9A0FC04FC6B84FA09520ED4D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/SettingsView.swift"; sourceTree = "<group>"; };
+		85528EF756144FE5BEB86791 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/MainView.swift"; sourceTree = "<group>"; };
+		D874581F830841959C60E1D4 /* MenuBarExtraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/MenuBarExtraView.swift"; sourceTree = "<group>"; };
+		554EAA59809A49B8A0C30E10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Resources/Assets.xcassets"; sourceTree = "<group>"; };
+		ECC8E72A347048899C1052B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Resources/Info.plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F7DFEF8C4FB54F51BD70A3EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AF3A76C1C994FC892E3D593 = {
+			isa = PBXGroup;
+			children = (
+				D5CF8236877747F9838BD946 /* MacLiveWallpaper */,
+				D0FA10456C4746868A8B52BB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D0FA10456C4746868A8B52BB = {
+			isa = PBXGroup;
+			children = (
+				31F5DA6CBE7248C59AFE8AEE /* MacLiveWallpaper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D5CF8236877747F9838BD946 = {
+			isa = PBXGroup;
+			children = (
+				31CC5672D45043148CACE952 /* App */,
+				2188EE63C0384F988F9504A5 /* Models */,
+				597FA8021A59421A829F4CFC /* Views */,
+				CC62ECBD5ED54933892F7D14 /* Wallpaper */,
+				38A4FA4789EF4091A5D6A952 /* Services */,
+				E3A1B4EED5D74E53A7F26490 /* Resources */,
+			);
+			path = MacLiveWallpaper;
+			sourceTree = "<group>";
+		};
+		31CC5672D45043148CACE952 = {
+			isa = PBXGroup;
+			children = (
+				DA77243E8B4946ACB4B9A97D /* MacLiveWallpaperApp.swift */,
+				2E9EC5A6A3EF4C738A6D0254 /* AppDelegate.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		2188EE63C0384F988F9504A5 = {
+			isa = PBXGroup;
+			children = (
+				D9E2A90A09ED47ACB4745189 /* Wallpaper.swift */,
+				39916699E4A74DDD9F82C7DB /* AppSettings.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		597FA8021A59421A829F4CFC = {
+			isa = PBXGroup;
+			children = (
+				535DAED86D2647A6A9747AB6 /* VideoPreviewView.swift */,
+				385A2B637B304BD88D9B9571 /* EmptyStateView.swift */,
+				9A0FC04FC6B84FA09520ED4D /* SettingsView.swift */,
+				85528EF756144FE5BEB86791 /* MainView.swift */,
+				D874581F830841959C60E1D4 /* MenuBarExtraView.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		CC62ECBD5ED54933892F7D14 = {
+			isa = PBXGroup;
+			children = (
+				15CACA0C385F4ADEB4B7F467 /* VideoPlaybackController.swift */,
+				136408B604FF41E5BBA55905 /* WallpaperWindowController.swift */,
+				43AE34757B0C4752BE4F47EB /* WallpaperManager.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		38A4FA4789EF4091A5D6A952 = {
+			isa = PBXGroup;
+			children = (
+				A2610ACA59184057AB83C06D /* PreferenceStore.swift */,
+				637A774AC12D4DA1AA141608 /* PowerStateObserver.swift */,
+				DEA7DFAC5DA34E1E976C0AF1 /* ScreenManager.swift */,
+				11C155F6F8544A7AA4342BF3 /* LoginItemManager.swift */,
+				460EFF43902148B094CB0F3E /* FileImportService.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		E3A1B4EED5D74E53A7F26490 = {
+			isa = PBXGroup;
+			children = (
+				554EAA59809A49B8A0C30E10 /* Assets.xcassets */,
+				ECC8E72A347048899C1052B2 /* Info.plist */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		40A0AF62104542C3A2E3AB50 /* MacLiveWallpaper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A360DE588ADD487E90179278 /* Build configuration list for PBXNativeTarget "MacLiveWallpaper" */;
+			buildPhases = (
+				AFA7461ED5054F2F9B8F7586 /* Sources */,
+				F7DFEF8C4FB54F51BD70A3EB /* Frameworks */,
+				5317F7DD083E44B183DC396E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacLiveWallpaper;
+			productName = MacLiveWallpaper;
+			productReference = 31F5DA6CBE7248C59AFE8AEE /* MacLiveWallpaper.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C13FD2FCA90A4595A8A03914 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					40A0AF62104542C3A2E3AB50 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 8F90FB40FB66464EB056DCCB /* Build configuration list for PBXProject "MacLiveWallpaper" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1AF3A76C1C994FC892E3D593;
+			productRefGroup = D0FA10456C4746868A8B52BB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				40A0AF62104542C3A2E3AB50 /* MacLiveWallpaper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5317F7DD083E44B183DC396E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED0C0BD8D6F24EBEA0F53C53 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AFA7461ED5054F2F9B8F7586 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD2454676A0F4AC4BE9E9958 /* MacLiveWallpaperApp.swift in Sources */,
+				82A7601BA21F4196AA62EBDC /* AppDelegate.swift in Sources */,
+				AF1D6FDE7D194927B910583A /* Wallpaper.swift in Sources */,
+				4D708829F1444EE2BCC08ABB /* AppSettings.swift in Sources */,
+				6CD9935EEDB1491AA5867DE9 /* PreferenceStore.swift in Sources */,
+				33CA7F66068843D0A9C3A6A0 /* PowerStateObserver.swift in Sources */,
+				B91115EEA9FE40BE83C74E17 /* ScreenManager.swift in Sources */,
+				E452B5D115214AF38BA0B6D8 /* LoginItemManager.swift in Sources */,
+				9669E9A699C0478481309140 /* FileImportService.swift in Sources */,
+				D0652E2DC9DC415C971AFB1B /* VideoPlaybackController.swift in Sources */,
+				1166E49684A346C4AC43F9B8 /* WallpaperWindowController.swift in Sources */,
+				783CE65A93B54128B8171188 /* WallpaperManager.swift in Sources */,
+				E425FE29FC244622B4B6EA3F /* VideoPreviewView.swift in Sources */,
+				CABD75EBCACF462296E25B09 /* EmptyStateView.swift in Sources */,
+				E14E5560751C4503A1A52496 /* SettingsView.swift in Sources */,
+				0A747E77F56A4B86A42927A8 /* MainView.swift in Sources */,
+				3FD49497FD6D49EAB01C45A7 /* MenuBarExtraView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7A75659C1885476886C28DF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E00319507D19475D95095C6D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		625E3BFFF6CB457A98DBD2BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MacLiveWallpaper/Resources/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.symverse.MacLiveWallpaper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		8F7C72674A824208BD4E56D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MacLiveWallpaper/Resources/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.symverse.MacLiveWallpaper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8F90FB40FB66464EB056DCCB /* Build configuration list for PBXProject "MacLiveWallpaper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A75659C1885476886C28DF5 /* Debug */,
+				E00319507D19475D95095C6D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A360DE588ADD487E90179278 /* Build configuration list for PBXNativeTarget "MacLiveWallpaper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				625E3BFFF6CB457A98DBD2BB /* Debug */,
+				8F7C72674A824208BD4E56D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C13FD2FCA90A4595A8A03914 /* Project object */;
+}
