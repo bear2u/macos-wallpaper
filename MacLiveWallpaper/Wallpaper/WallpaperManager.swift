@@ -24,7 +24,6 @@ public final class WallpaperManager: ObservableObject {
     private var windowControllers: [WallpaperWindowController] = []
     private var cancellables = Set<AnyCancellable>()
     private var switchTimer: Timer?
-    private var videoEndObserverToken: Any?
     
     private init() {
         self.playbackOrder = PreferenceStore.shared.loadPlaybackOrder()
@@ -36,7 +35,7 @@ public final class WallpaperManager: ObservableObject {
     
     private func setupObservers() {
         ScreenManager.shared.onScreenConfigurationChanged = { [weak self] screens in
-            self?.refreshDisplays(screens: screens)
+            self?.rebuildDisplays(screens: screens)
         }
         
         PowerStateObserver.shared.onSleep = { [weak self] in
@@ -49,7 +48,6 @@ public final class WallpaperManager: ObservableObject {
             self?.resume()
         }
         
-        // AVPlayerItem 재생 완료 시 다음 비디오 자동 넘김 (switchInterval == .onEnd 또는 이미지 타임아웃)
         NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
             .sink { [weak self] _ in
                 guard let self = self else { return }
@@ -160,8 +158,7 @@ public final class WallpaperManager: ObservableObject {
             self.currentIndex = idx
         }
         
-        let screens = NSScreen.screens
-        refreshDisplays(screens: screens)
+        refreshDisplays()
         restartSwitchTimer()
     }
     
@@ -189,9 +186,7 @@ public final class WallpaperManager: ObservableObject {
         self.currentWallpaper = wallpaper
         PreferenceStore.shared.saveLastWallpaper(wallpaper)
         
-        for wc in windowControllers {
-            wc.playbackController.setMuted(isMuted)
-        }
+        refreshDisplays(animated: false)
     }
     
     public func updateIsStatic(_ isStatic: Bool) {
@@ -200,25 +195,17 @@ public final class WallpaperManager: ObservableObject {
         self.currentWallpaper = wallpaper
         PreferenceStore.shared.saveLastWallpaper(wallpaper)
         
-        for wc in windowControllers {
-            wc.playbackController.setStatic(isStatic)
-        }
+        refreshDisplays(animated: false)
         isPlaying = !isStatic
     }
     
     public func pause() {
         guard let wallpaper = currentWallpaper, wallpaper.mediaKind == .video else { return }
-        for wc in windowControllers {
-            wc.playbackController.pause()
-        }
         isPlaying = false
     }
     
     public func resume() {
         guard let wallpaper = currentWallpaper, wallpaper.mediaKind == .video, !wallpaper.isStatic else { return }
-        for wc in windowControllers {
-            wc.playbackController.play()
-        }
         isPlaying = true
     }
     
@@ -239,7 +226,36 @@ public final class WallpaperManager: ObservableObject {
         isPlaying = false
     }
     
-    public func refreshDisplays(screens: [NSScreen] = NSScreen.screens) {
+    public func refreshDisplays(animated: Bool = true) {
+        let screens = NSScreen.screens
+        
+        guard let wallpaper = currentWallpaper else { return }
+        
+        // 화면 개수가 바뀐 경우 윈도우 재구성
+        if windowControllers.count != screens.count {
+            rebuildDisplays(screens: screens)
+            return
+        }
+        
+        // 화면 윈도우가 이미 존재하면 부드러운 Cross-Dissolve 트랜지션 수행
+        for wc in windowControllers {
+            if wallpaper.mediaKind == .image {
+                wc.showImage(url: wallpaper.fileURL, scalingMode: wallpaper.scalingMode, animated: animated)
+            } else {
+                wc.showVideo(
+                    url: wallpaper.fileURL,
+                    scalingMode: wallpaper.scalingMode,
+                    isMuted: wallpaper.isMuted,
+                    isStatic: wallpaper.isStatic,
+                    animated: animated
+                )
+            }
+        }
+        
+        isPlaying = (wallpaper.mediaKind == .video) && !wallpaper.isStatic
+    }
+    
+    private func rebuildDisplays(screens: [NSScreen]) {
         for wc in windowControllers {
             wc.close()
         }
@@ -250,13 +266,14 @@ public final class WallpaperManager: ObservableObject {
         for screen in screens {
             let wc = WallpaperWindowController(screen: screen)
             if wallpaper.mediaKind == .image {
-                wc.showImage(url: wallpaper.fileURL, scalingMode: wallpaper.scalingMode)
+                wc.showImage(url: wallpaper.fileURL, scalingMode: wallpaper.scalingMode, animated: false)
             } else {
                 wc.showVideo(
                     url: wallpaper.fileURL,
                     scalingMode: wallpaper.scalingMode,
                     isMuted: wallpaper.isMuted,
-                    isStatic: wallpaper.isStatic
+                    isStatic: wallpaper.isStatic,
+                    animated: false
                 )
             }
             windowControllers.append(wc)
