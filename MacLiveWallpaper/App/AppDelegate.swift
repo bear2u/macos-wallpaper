@@ -43,6 +43,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         togglePlayItem.target = self
         menu.addItem(togglePlayItem)
         
+        let nextItem = NSMenuItem(title: "Next Wallpaper", action: #selector(nextWallpaper), keyEquivalent: "n")
+        nextItem.target = self
+        menu.addItem(nextItem)
+        
         let removeItem = NSMenuItem(title: "Remove Live Wallpaper", action: #selector(removeWallpaper), keyEquivalent: "r")
         removeItem.target = self
         menu.addItem(removeItem)
@@ -64,6 +68,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc public func togglePlayback() {
         WallpaperManager.shared.togglePlayPause()
+    }
+    
+    @objc public func nextWallpaper() {
+        WallpaperManager.shared.playNextWallpaper()
     }
     
     @objc public func removeWallpaper() {

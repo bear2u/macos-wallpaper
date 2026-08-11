@@ -8,6 +8,12 @@ public final class FileImportService {
     private init() {}
     
     public func selectMediaFile(completion: @escaping (URL?) -> Void) {
+        selectMultipleMediaFiles { urls in
+            completion(urls.first)
+        }
+    }
+    
+    public func selectMultipleMediaFiles(completion: @escaping ([URL]) -> Void) {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [
             .mpeg4Movie,
@@ -22,15 +28,15 @@ public final class FileImportService {
         ]
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.title = "Select Wallpaper (Video or Image)"
+        panel.allowsMultipleSelection = true
+        panel.title = "Select Wallpapers (Videos or Images)"
         panel.prompt = "Choose"
         
         panel.begin { response in
-            if response == .OK, let selectedURL = panel.url {
-                completion(selectedURL)
+            if response == .OK {
+                completion(panel.urls)
             } else {
-                completion(nil)
+                completion([])
             }
         }
     }

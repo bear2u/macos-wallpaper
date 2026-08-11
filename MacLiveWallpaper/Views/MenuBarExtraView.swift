@@ -35,9 +35,8 @@ struct MenuBarExtraView: View {
             
             Divider()
             
-            // Play / Pause Toggle
-            if let wallpaper = wallpaperManager.currentWallpaper {
-                if !wallpaper.isStatic {
+            if wallpaperManager.currentWallpaper != nil {
+                if let wp = wallpaperManager.currentWallpaper, !wp.isStatic && wp.mediaKind == .video {
                     Button(action: {
                         wallpaperManager.togglePlayPause()
                     }) {
@@ -45,6 +44,14 @@ struct MenuBarExtraView: View {
                             wallpaperManager.isPlaying ? "Pause Wallpaper" : "Resume Wallpaper",
                             systemImage: wallpaperManager.isPlaying ? "pause.fill" : "play.fill"
                         )
+                    }
+                }
+                
+                if wallpaperManager.playlist.count > 1 {
+                    Button(action: {
+                        wallpaperManager.playNextWallpaper()
+                    }) {
+                        Label("Next Wallpaper", systemImage: "forward.fill")
                     }
                 }
                 
@@ -79,13 +86,14 @@ struct MenuBarExtraView: View {
     
     private var statusColor: Color {
         guard let wallpaper = wallpaperManager.currentWallpaper else { return .gray }
-        if wallpaper.isStatic { return .blue }
+        if wallpaper.mediaKind == .image || wallpaper.isStatic { return .blue }
         return wallpaperManager.isPlaying ? .green : .orange
     }
     
     private var statusText: String {
         guard let wallpaper = wallpaperManager.currentWallpaper else { return "No Wallpaper Set" }
-        if wallpaper.isStatic { return "Static Wallpaper Active" }
+        if wallpaper.mediaKind == .image { return "Image Wallpaper Active" }
+        if wallpaper.isStatic { return "Static Video Frame Active" }
         return wallpaperManager.isPlaying ? "Live Wallpaper Playing" : "Wallpaper Paused"
     }
 }

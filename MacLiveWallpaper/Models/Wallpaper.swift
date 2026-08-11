@@ -27,6 +27,51 @@ public enum ScalingMode: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+public enum PlaybackOrder: String, Codable, CaseIterable, Identifiable {
+    case sequential = "sequential"
+    case random = "random"
+    
+    public var id: String { rawValue }
+    public var displayName: String {
+        switch self {
+        case .sequential: return "Sequential (In Order)"
+        case .random: return "Random (Shuffle)"
+        }
+    }
+}
+
+public enum SwitchInterval: String, Codable, CaseIterable, Identifiable {
+    case onEnd = "onEnd"
+    case min1 = "1min"
+    case min5 = "5min"
+    case min15 = "15min"
+    case min30 = "30min"
+    case hour1 = "1hour"
+    
+    public var id: String { rawValue }
+    public var displayName: String {
+        switch self {
+        case .onEnd: return "When Video Ends"
+        case .min1: return "Every 1 minute"
+        case .min5: return "Every 5 minutes"
+        case .min15: return "Every 15 minutes"
+        case .min30: return "Every 30 minutes"
+        case .hour1: return "Every 1 hour"
+        }
+    }
+    
+    public var timeIntervalSeconds: TimeInterval? {
+        switch self {
+        case .onEnd: return nil
+        case .min1: return 60
+        case .min5: return 300
+        case .min15: return 900
+        case .min30: return 1800
+        case .hour1: return 3600
+        }
+    }
+}
+
 public struct Wallpaper: Identifiable, Codable, Equatable {
     public let id: UUID
     public var name: String

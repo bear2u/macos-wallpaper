@@ -1,26 +1,44 @@
 import AppKit
 import Combine
+import AVFoundation
 
 public final class WallpaperManager: ObservableObject {
     public static let shared = WallpaperManager()
     
     @Published public private(set) var currentWallpaper: Wallpaper?
     @Published public private(set) var isPlaying: Bool = false
+    @Published public private(set) var playlist: [Wallpaper] = []
+    @Published public var playbackOrder: PlaybackOrder = .sequential {
+        didSet {
+            PreferenceStore.shared.savePlaybackOptions(order: playbackOrder, interval: switchInterval)
+        }
+    }
+    @Published public var switchInterval: SwitchInterval = .onEnd {
+        didSet {
+            PreferenceStore.shared.savePlaybackOptions(order: playbackOrder, interval: switchInterval)
+            restartSwitchTimer()
+        }
+    }
+    @Published public private(set) var currentIndex: Int = 0
     
     private var windowControllers: [WallpaperWindowController] = []
     private var cancellables = Set<AnyCancellable>()
+    private var switchTimer: Timer?
+    private var videoEndObserverToken: Any?
     
     private init() {
+        self.playbackOrder = PreferenceStore.shared.loadPlaybackOrder()
+        self.switchInterval = PreferenceStore.shared.loadSwitchInterval()
+        self.playlist = PreferenceStore.shared.loadPlaylist()
+        
         setupObservers()
     }
     
     private func setupObservers() {
-        // Screen config changes
         ScreenManager.shared.onScreenConfigurationChanged = { [weak self] screens in
             self?.refreshDisplays(screens: screens)
         }
         
-        // Power state changes (Sleep / Wake)
         PowerStateObserver.shared.onSleep = { [weak self] in
             guard PreferenceStore.shared.settings.pauseOnSleep else { return }
             self?.pause()
@@ -30,17 +48,126 @@ public final class WallpaperManager: ObservableObject {
             guard PreferenceStore.shared.settings.pauseOnSleep else { return }
             self?.resume()
         }
+        
+        // AVPlayerItem 재생 완료 시 다음 비디오 자동 넘김 (switchInterval == .onEnd 또는 이미지 타임아웃)
+        NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                if self.playlist.count > 1 && self.switchInterval == .onEnd {
+                    self.playNextWallpaper()
+                }
+            }
+            .store(in: &cancellables)
     }
+    
+    // MARK: - Playlist Operations
+    
+    public func setPlaylist(_ list: [Wallpaper]) {
+        self.playlist = list
+        PreferenceStore.shared.savePlaylist(list)
+        if let first = list.first {
+            self.currentIndex = 0
+            setWallpaper(first)
+        }
+        restartSwitchTimer()
+    }
+    
+    public func addToPlaylist(urls: [URL]) {
+        var updated = playlist
+        for url in urls {
+            let wp = Wallpaper(name: url.lastPathComponent, fileURL: url)
+            if !updated.contains(where: { $0.fileURL == url }) {
+                updated.append(wp)
+            }
+        }
+        setPlaylist(updated)
+    }
+    
+    public func removeFromPlaylist(id: UUID) {
+        var updated = playlist
+        updated.removeAll(where: { $0.id == id })
+        setPlaylist(updated)
+    }
+    
+    public func clearPlaylist() {
+        switchTimer?.invalidate()
+        switchTimer = nil
+        playlist.removeAll()
+        removeWallpaper()
+    }
+    
+    public func playNextWallpaper() {
+        guard !playlist.isEmpty else { return }
+        
+        let nextIndex: Int
+        if playlist.count == 1 {
+            nextIndex = 0
+        } else if playbackOrder == .random {
+            var rand = Int.random(in: 0..<playlist.count)
+            if rand == currentIndex {
+                rand = (currentIndex + 1) % playlist.count
+            }
+            nextIndex = rand
+        } else {
+            nextIndex = (currentIndex + 1) % playlist.count
+        }
+        
+        self.currentIndex = nextIndex
+        setWallpaper(playlist[nextIndex])
+    }
+    
+    public func playPreviousWallpaper() {
+        guard !playlist.isEmpty else { return }
+        
+        let prevIndex: Int
+        if playlist.count == 1 {
+            prevIndex = 0
+        } else if playbackOrder == .random {
+            prevIndex = Int.random(in: 0..<playlist.count)
+        } else {
+            prevIndex = (currentIndex - 1 + playlist.count) % playlist.count
+        }
+        
+        self.currentIndex = prevIndex
+        setWallpaper(playlist[prevIndex])
+    }
+    
+    private func restartSwitchTimer() {
+        switchTimer?.invalidate()
+        switchTimer = nil
+        
+        guard playlist.count > 1 else { return }
+        
+        if let seconds = switchInterval.timeIntervalSeconds {
+            switchTimer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: true) { [weak self] _ in
+                self?.playNextWallpaper()
+            }
+        }
+    }
+    
+    // MARK: - Single Wallpaper Control
     
     public func setWallpaper(_ wallpaper: Wallpaper) {
         self.currentWallpaper = wallpaper
         PreferenceStore.shared.saveLastWallpaper(wallpaper)
         
+        if !playlist.contains(where: { $0.fileURL == wallpaper.fileURL }) {
+            self.playlist.append(wallpaper)
+            PreferenceStore.shared.savePlaylist(playlist)
+        }
+        
+        if let idx = playlist.firstIndex(where: { $0.fileURL == wallpaper.fileURL }) {
+            self.currentIndex = idx
+        }
+        
         let screens = NSScreen.screens
         refreshDisplays(screens: screens)
+        restartSwitchTimer()
     }
     
     public func removeWallpaper() {
+        switchTimer?.invalidate()
+        switchTimer = nil
         stop()
         PreferenceStore.shared.clearLastWallpaper()
     }
