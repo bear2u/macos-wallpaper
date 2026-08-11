@@ -10,14 +10,17 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     public func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
         
-        // Setup Status Bar Menu Item
         setupStatusItem()
-        
-        // Auto-resume saved wallpaper if configured
+        updateActivationPolicy(hideDockIcon: PreferenceStore.shared.settings.hideDockIcon)
         WallpaperManager.shared.loadSavedWallpaper()
-        
-        // Prevent app from quitting when all windows are closed
-        NSApplication.shared.setActivationPolicy(.regular)
+    }
+    
+    public func updateActivationPolicy(hideDockIcon: Bool) {
+        if hideDockIcon {
+            NSApp.setActivationPolicy(.accessory)
+        } else {
+            NSApp.setActivationPolicy(.regular)
+        }
     }
     
     private func setupStatusItem() {
@@ -57,7 +60,6 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc private func statusItemClicked() {
-        // Menu item click action handled by NSMenu
     }
     
     @objc public func togglePlayback() {

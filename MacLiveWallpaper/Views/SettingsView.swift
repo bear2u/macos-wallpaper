@@ -15,14 +15,23 @@ struct SettingsView: View {
                 ))
                 .help("Automatically open Mac Live Wallpaper when you log into your Mac.")
                 
+                Toggle("Hide Dock Icon (MenuBar Only Mode)", isOn: Binding(
+                    get: { preferenceStore.settings.hideDockIcon },
+                    set: { newValue in
+                        preferenceStore.settings.hideDockIcon = newValue
+                        AppDelegate.shared?.updateActivationPolicy(hideDockIcon: newValue)
+                    }
+                ))
+                .help("Hide the app icon from macOS Dock and run quietly in the top Menu Bar only.")
+                
                 Toggle("Resume last wallpaper on launch", isOn: $preferenceStore.settings.resumeLastWallpaper)
-                    .help("Automatically set the previous video wallpaper when the app launches.")
+                    .help("Automatically set the previous wallpaper when the app launches.")
                 
                 Toggle("Pause video when display sleeps", isOn: $preferenceStore.settings.pauseOnSleep)
                     .help("Pause playback during display sleep or lock screen to conserve battery and CPU.")
             }
             
-            Section(header: Text("Default Video Playback").fontWeight(.semibold)) {
+            Section(header: Text("Default Media Playback").fontWeight(.semibold)) {
                 Picker("Fill Mode", selection: $preferenceStore.settings.defaultScalingMode) {
                     ForEach(ScalingMode.allCases) { mode in
                         Text(mode.displayName).tag(mode)
@@ -37,14 +46,13 @@ struct SettingsView: View {
                 HStack {
                     Spacer()
                     Button("Remove Current Wallpaper") {
-                        WallpaperManager.shared.stop()
-                        PreferenceStore.shared.clearLastWallpaper()
+                        WallpaperManager.shared.removeWallpaper()
                     }
                     .foregroundColor(.red)
                 }
             }
         }
         .padding(20)
-        .frame(width: 440, height: 320)
+        .frame(width: 440, height: 350)
     }
 }
