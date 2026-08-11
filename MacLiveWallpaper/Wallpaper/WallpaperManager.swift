@@ -24,6 +24,7 @@ public final class WallpaperManager: ObservableObject {
     private var windowControllers: [WallpaperWindowController] = []
     private var cancellables = Set<AnyCancellable>()
     private var switchTimer: Timer?
+    private var lastSwitchTime: Date = Date.distantPast
     
     private init() {
         self.playbackOrder = PreferenceStore.shared.loadPlaybackOrder()
@@ -48,11 +49,19 @@ public final class WallpaperManager: ObservableObject {
             self?.resume()
         }
         
+        // 영상 1회 재생 종료 시 다음 비디오로 넘김 (switchInterval == .onEnd 일 때)
         NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                if self.playlist.count > 1 && self.switchInterval == .onEnd {
-                    self.playNextWallpaper()
+                guard self.playlist.count > 1 && self.switchInterval == .onEnd else { return }
+                
+                // 최소 1초 디바운스 가드로 중복 넘김 방지
+                let now = Date()
+                if now.timeIntervalSince(self.lastSwitchTime) > 1.0 {
+                    self.lastSwitchTime = now
+                    DispatchQueue.main.async {
+                        self.playNextWallpaper()
+                    }
                 }
             }
             .store(in: &cancellables)
@@ -63,7 +72,18 @@ public final class WallpaperManager: ObservableObject {
     public func setPlaylist(_ list: [Wallpaper]) {
         self.playlist = list
         PreferenceStore.shared.savePlaylist(list)
-        if let first = list.first {
+        
+        if list.isEmpty {
+            removeWallpaper()
+            return
+        }
+        
+        if currentWallpaper == nil, let first = list.first {
+            self.currentIndex = 0
+            setWallpaper(first)
+        } else if let current = currentWallpaper, let idx = list.firstIndex(where: { $0.fileURL.path == current.fileURL.path }) {
+            self.currentIndex = idx
+        } else if let first = list.first {
             self.currentIndex = 0
             setWallpaper(first)
         }
@@ -72,13 +92,29 @@ public final class WallpaperManager: ObservableObject {
     
     public func addToPlaylist(urls: [URL]) {
         var updated = playlist
+        var addedAny = false
+        
         for url in urls {
             let wp = Wallpaper(name: url.lastPathComponent, fileURL: url)
-            if !updated.contains(where: { $0.fileURL == url }) {
+            if !updated.contains(where: { $0.fileURL.path == url.path }) {
                 updated.append(wp)
+                addedAny = true
             }
         }
-        setPlaylist(updated)
+        
+        if addedAny {
+            self.playlist = updated
+            PreferenceStore.shared.savePlaylist(updated)
+            
+            if currentWallpaper == nil, let first = updated.first {
+                self.currentIndex = 0
+                setWallpaper(first)
+            } else if let current = currentWallpaper, let idx = updated.firstIndex(where: { $0.fileURL.path == current.fileURL.path }) {
+                self.currentIndex = idx
+            }
+            
+            restartSwitchTimer()
+        }
     }
     
     public func removeFromPlaylist(id: UUID) {
@@ -111,7 +147,8 @@ public final class WallpaperManager: ObservableObject {
         }
         
         self.currentIndex = nextIndex
-        setWallpaper(playlist[nextIndex])
+        let targetWallpaper = playlist[nextIndex]
+        applyWallpaperInternal(targetWallpaper, animated: true)
     }
     
     public func playPreviousWallpaper() {
@@ -127,7 +164,8 @@ public final class WallpaperManager: ObservableObject {
         }
         
         self.currentIndex = prevIndex
-        setWallpaper(playlist[prevIndex])
+        let targetWallpaper = playlist[prevIndex]
+        applyWallpaperInternal(targetWallpaper, animated: true)
     }
     
     private func restartSwitchTimer() {
@@ -146,20 +184,23 @@ public final class WallpaperManager: ObservableObject {
     // MARK: - Single Wallpaper Control
     
     public func setWallpaper(_ wallpaper: Wallpaper) {
-        self.currentWallpaper = wallpaper
-        PreferenceStore.shared.saveLastWallpaper(wallpaper)
-        
-        if !playlist.contains(where: { $0.fileURL == wallpaper.fileURL }) {
+        if !playlist.contains(where: { $0.fileURL.path == wallpaper.fileURL.path }) {
             self.playlist.append(wallpaper)
             PreferenceStore.shared.savePlaylist(playlist)
         }
         
-        if let idx = playlist.firstIndex(where: { $0.fileURL == wallpaper.fileURL }) {
+        if let idx = playlist.firstIndex(where: { $0.fileURL.path == wallpaper.fileURL.path }) {
             self.currentIndex = idx
         }
         
-        refreshDisplays()
+        applyWallpaperInternal(wallpaper, animated: true)
         restartSwitchTimer()
+    }
+    
+    private func applyWallpaperInternal(_ wallpaper: Wallpaper, animated: Bool) {
+        self.currentWallpaper = wallpaper
+        PreferenceStore.shared.saveLastWallpaper(wallpaper)
+        refreshDisplays(animated: animated)
     }
     
     public func removeWallpaper() {
@@ -228,16 +269,13 @@ public final class WallpaperManager: ObservableObject {
     
     public func refreshDisplays(animated: Bool = true) {
         let screens = NSScreen.screens
-        
         guard let wallpaper = currentWallpaper else { return }
         
-        // 화면 개수가 바뀐 경우 윈도우 재구성
         if windowControllers.count != screens.count {
             rebuildDisplays(screens: screens)
             return
         }
         
-        // 화면 윈도우가 이미 존재하면 부드러운 Cross-Dissolve 트랜지션 수행
         for wc in windowControllers {
             if wallpaper.mediaKind == .image {
                 wc.showImage(url: wallpaper.fileURL, scalingMode: wallpaper.scalingMode, animated: animated)
